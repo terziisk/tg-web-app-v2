@@ -1,33 +1,21 @@
-
-// src/features/Settings/ThemeSwitcher.tsx
-import React from 'react';
-import { useUiStore, type ColorScheme } from '@/store/uiStore';
-import { updateUserSettings } from '@/lib/api/authService';
+// src/features/settings/ThemeSwitcher.tsx
+import { useSettingsStore, type ColorScheme } from '@/store/settingsStore';
 import { SegmentedControl } from '@telegram-apps/telegram-ui';
 
 export const ThemeSwitcher = () => {
-  const { colorScheme, setColorScheme } = useUiStore();
+  const { colorScheme, setColorScheme } = useSettingsStore();
 
-   const handleThemeChange = async (newScheme: ColorScheme) => {
-    // 1. Оптимистично обновляем UI
+  const handleThemeChange = (newScheme: ColorScheme) => {
     setColorScheme(newScheme);
-    try {
-      // 2. Отправляем изменение на бэкенд
-      await updateUserSettings({ appColorScheme: newScheme });
-    } catch (error) {
-      console.error('Ошибка сохранения темы:', error);
-      // TODO: Можно показать уведомление об ошибке и откатить изменение
-    }
   };
   
   if (!colorScheme) return null; // Не показываем, пока тема не загружена
 
   return (
     <div>
-      <h3 className="mb-2 text-text-color">Тема оформления</h3>
+      <h3 className="mb-3 text-text-color font-medium">Тема оформления</h3>
       <SegmentedControl
-        // Важно: key нужен, чтобы React пересоздал компонент при смене значения извне
-        key={colorScheme} 
+        key={colorScheme} // Важно для корректного отображения
         defaultValue={colorScheme}
         onChange={(event: React.FormEvent<HTMLDivElement>) => {
           const value = (event.target as HTMLInputElement).value as ColorScheme;

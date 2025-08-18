@@ -5,20 +5,15 @@ import { useAuthStore } from '../../store/authStore';
 import { retrieveLaunchParams, retrieveRawInitData } from '@telegram-apps/sdk-react';
 import { authenticateUser } from './authService';
 
-
-// ✅ Определяем новый, более надежный тип для нашей очереди
 interface QueuedRequestCallbacks {
   onSuccess: (token: string) => void;
   onFailure: (error: Error) => void;
 }
 
-
 // Переменные для управления процессом обновления токена
 let isRefreshing = false;
-// ✅ Очередь теперь хранит объекты с двумя колбэками
 let failedQueue: QueuedRequestCallbacks[] = [];
 
-// ✅ Обновляем логику обработки очереди
 const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue.forEach(callbacks => {
     if (error) {
@@ -34,9 +29,7 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-
-
-// ▼▼▼ ОБНОВЛЕННЫЙ ПЕРЕХВАТЧИК ЗАПРОСОВ ▼▼▼
+// Перехватчик запросов
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     // Не добавляем токен к запросу на логин
@@ -47,14 +40,14 @@ apiClient.interceptors.request.use(
     const { accessToken, login, logout } = useAuthStore.getState();
 
     if (!accessToken) {
-      console.warn("Нет токена для запроса");
-      // Можно либо реджектить, либо позволить пройти, чтобы бэкенд вернул 401
+      console.warn("⚠️ Нет токена для запроса");
       return config;
     }
 
-    // Проверяем срок жизни токена
+    // Проверяем срок жизни токена (добавляем буфер в 30 секунд)
     const decodedToken = jwtDecode<{ exp: number }>(accessToken);
-    const isExpired = decodedToken.exp * 1000 < Date.now();
+    const bufferTime = 30 * 1000; // 30 секунд в миллисекундах
+    const isExpired = (decodedToken.exp * 1000) < (Date.now() + bufferTime);
 
     if (!isExpired) {
       // Если токен валиден, просто добавляем его и выполняем запрос
@@ -62,13 +55,11 @@ apiClient.interceptors.request.use(
       return config;
     }
 
-    console.log("Токен истек. Начинаем процесс обновления.... Время жизни токена: ", new Date(decodedToken.exp * 1000).toLocaleString());
-    console.log("Текущая дата: ", Date.now());
-    console.log("Из токена: ",  decodedToken.exp * 1000);
+    console.log("🔄 Токен истекает, начинаем обновление...");
 
     // Если уже идет процесс обновления, ставим текущий запрос в очередь
     if (isRefreshing) {
-     // ✅ Теперь мы возвращаем промис, который правильно обрабатывает и успех, и ошибку
+      console.log("⏳ Процесс обновления уже идет, добавляем запрос в очередь");
       return new Promise((resolve, reject) => {
         failedQueue.push({
           onSuccess: (token: string) => {
@@ -84,6 +75,7 @@ apiClient.interceptors.request.use(
 
     // Начинаем процесс обновления
     isRefreshing = true;
+    console.log("🔑 Начинаем процесс обновления токена...");
 
     try {
       // Получаем свежие данные для ре-аутентификации
@@ -95,30 +87,23 @@ apiClient.interceptors.request.use(
       }
       
       const { accessToken: newAccessToken } = await authenticateUser(rawInitData, launchParams);
-      const { user, profile } = useAuthStore.getState(); // Берем текущего юзера
-      // Важно: в authService функция authenticateUser должна вызывать apiClient.post,
-      // но для самого запроса на логин токен не нужен. Наш if в начале это обрабатывает.
+      const { user, profile } = useAuthStore.getState();
 
-       // Обновляем данные в сторе
-      // Вызываем login с обновленным токеном и старыми данными пользователя/профиля
+      // Обновляем данные в сторе
       login(newAccessToken, user, profile);
-      
-      
       
       // Добавляем новый токен в текущий запрос
       config.headers.Authorization = `Bearer ${newAccessToken}`;
       
-      console.log("Токен успешно обновлен.");
+      console.log("✅ Токен успешно обновлен");
+      
       // Выполняем все запросы из очереди с новым токеном
       processQueue(null, newAccessToken);
       return config;
-     
-      
-    
     } catch (error) {
       console.error("❌ Ошибка обновления токена:", error);
       processQueue(error as Error, null);
-      logout(); // Если обновить не удалось - разлогиниваем пользователя
+      logout();
       return Promise.reject(error);
     } finally {
       isRefreshing = false;
@@ -129,14 +114,14 @@ apiClient.interceptors.request.use(
   }
 );
 
-
-// Перехватчик ответов можно оставить для обработки 401 в крайних случаях
+// Упрощенный перехватчик ответов
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401 && !error.config._retry) {
-       console.error("Получен 401, который не был обработан при обновлении токена. Выполняется выход.");
-       useAuthStore.getState().logout();
+    // Только логируем 401 ошибки, не предпринимаем действий
+    // (так как обновление токена должно происходить в request interceptor)
+    if (error.response?.status === 401) {
+      console.warn("⚠️ Получен 401 ответ:", error.config?.url);
     }
     return Promise.reject(error);
   }
