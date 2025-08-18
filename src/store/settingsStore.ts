@@ -92,12 +92,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   
   // Действия для настроек
   setLanguage: (lang) => {
+    console.log("🌍 Меняем язык на:", lang);
+    // Сразу применяем изменение в i18n
     i18n.changeLanguage(lang);
     set({ language: lang });
     get().checkForChanges();
   },
   
   setColorScheme: (scheme) => {
+    console.log("🎨 Меняем тему на:", scheme);
     set({ colorScheme: scheme });
     get().checkForChanges();
   },
@@ -105,6 +108,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   // Инициализация (вызывается при загрузке профиля)
   initializeSettings: (lang, scheme) => {
     console.log("🎨 Инициализируем настройки:", { lang, scheme });
+    // Устанавливаем язык в i18n
     i18n.changeLanguage(lang);
     set({
       language: lang,
@@ -122,6 +126,12 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       state.language !== state.initialLanguage || 
       state.colorScheme !== state.initialColorScheme;
     
+    console.log("🔍 Проверяем изменения:", { 
+      current: { lang: state.language, scheme: state.colorScheme },
+      initial: { lang: state.initialLanguage, scheme: state.initialColorScheme },
+      hasChanges 
+    });
+    
     set({ hasUnsavedChanges: hasChanges });
   },
   
@@ -129,7 +139,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   saveSettings: async () => {
     const state = get();
     
-    if (!state.hasUnsavedChanges) return;
+    if (!state.hasUnsavedChanges) {
+      console.log("🤷 Нет изменений для сохранения");
+      return;
+    }
+    
+    console.log("💾 Сохраняем настройки:", { 
+      language: state.language, 
+      colorScheme: state.colorScheme 
+    });
     
     set({ isSaving: true });
     
@@ -154,22 +172,40 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       throw error;
     }
   },
-    // Закрытие панели без сохранения
-
-    closePanelWithoutSaving: () => {
-    console.log("🚫 Закрываем панель без сохранения изменений")
+  
+  // Закрытие панели без сохранения
+  closePanelWithoutSaving: () => {
+    console.log("🚫 Закрываем панель без сохранения изменений");
     const state = get();
-    set({
-      isPanelOpen: false,
-      language: state.initialLanguage,
-      colorScheme: state.initialColorScheme,
-      hasUnsavedChanges: false,
-    });
+    
+    // Если были изменения, отменяем их
+    if (state.hasUnsavedChanges) {
+      // Восстанавливаем язык в i18n
+      if (state.initialLanguage && state.language !== state.initialLanguage) {
+        i18n.changeLanguage(state.initialLanguage);
+      }
+      
+      set({
+        isPanelOpen: false,
+        language: state.initialLanguage,
+        colorScheme: state.initialColorScheme,
+        hasUnsavedChanges: false,
+      });
+    } else {
+      set({ isPanelOpen: false });
+    }
   },
 
   // Отмена изменений
   discardChanges: () => {
+    console.log("🔄 Отменяем изменения настроек");
     const state = get();
+    
+    // Восстанавливаем язык в i18n
+    if (state.initialLanguage && state.language !== state.initialLanguage) {
+      i18n.changeLanguage(state.initialLanguage);
+    }
+    
     set({
       language: state.initialLanguage,
       colorScheme: state.initialColorScheme,

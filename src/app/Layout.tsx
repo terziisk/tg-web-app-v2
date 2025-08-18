@@ -1,5 +1,6 @@
 // src/app/Layout.tsx
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useUiStore } from '../store/uiStore';
 
 // Импортируем твои фичи и страницы
@@ -8,31 +9,29 @@ import { MainTabs } from '../features/MainTabs';
 import { SettingsPanel } from '../features/settings/SettingsPanel';
 import { SettingsButton } from '../features/settings/SettingsButton';
 
-// --- Заглушки ---
-const ManagementHeader = () => <div className="p-4 text-center text-xl font-bold">Управление</div>;
-const AdvertiserHeader = () => <div className="p-4 text-center text-xl font-bold">Рекламодателю</div>;
-const ActivitiesPage = () => <div className="p-4">Контент страницы "Мои активности"</div>;
-const ManagementPage = () => <div className="p-4">Контент страницы "Управление"</div>;
-const AdvertiserPage = () => <div className="p-4">Контент страницы "Рекламодателю"</div>;
-// ---
-
 const Layout = () => {
+  const { t } = useTranslation();
   const { activeTab } = useUiStore();
 
-  // Логика выбора компонентов остается той же
+  // --- Заглушки с переводами ---
+  const ManagementHeader = () => <div className="p-4 text-center text-xl font-bold">{t('management_header')}</div>;
+  const AdvertiserHeader = () => <div className="p-4 text-center text-xl font-bold">{t('advertiser_header')}</div>;
+  const ActivitiesPage = () => <div className="p-4"><h2 className="text-2xl font-bold">{t('activities_content')}</h2></div>;
+  const ManagementPage = () => <div className="p-4"><h2 className="text-2xl font-bold">{t('management_content')}</h2></div>;
+  const AdvertiserPage = () => <div className="p-4"><h2 className="text-2xl font-bold">{t('advertiser_content')}</h2></div>;
+
+  // Логика выбора компонентов
   const headerComponents = useMemo(() => ({
     activities: <ProfileHeader />,
     management: <ManagementHeader />,
     advertiser: <AdvertiserHeader />,
-  }), []); // Зависимости больше не нужны, activeTab не влияет на рендер этих компонентов
+  }), [t]); // Добавляем зависимость от t для обновления при смене языка
 
   const pageComponents = useMemo(() => ({
     activities: <ActivitiesPage />,
     management: <ManagementPage />,
     advertiser: <AdvertiserPage />,
-  }), []);
-
-  // ВСЯ СЛОЖНАЯ ЛОГИКА useEffect УДАЛЕНА!
+  }), [t]); // Добавляем зависимость от t для обновления при смене языка
 
   return (
     <>

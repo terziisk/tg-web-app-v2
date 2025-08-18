@@ -1,14 +1,16 @@
 // src/features/MainTabs.tsx
+import { useTranslation } from 'react-i18next';
 import { useUiStore, type Tab } from '../store/uiStore';
-import clsx from 'clsx'; // Утилита для условного соединения классов
+import clsx from 'clsx';
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'activities', label: 'Мои активности' },
-  { id: 'management', label: 'Управление' },
-  { id: 'advertiser', label: 'Рекламодателю' },
+const TABS: { id: Tab; labelKey: string }[] = [
+  { id: 'activities', labelKey: 'my_activities' },
+  { id: 'management', labelKey: 'management' },
+  { id: 'advertiser', labelKey: 'advertiser' },
 ];
 
 export const MainTabs = () => {
+  const { t } = useTranslation();
   const { activeTab, setActiveTab } = useUiStore();
 
   return (
@@ -24,7 +26,7 @@ export const MainTabs = () => {
               : 'text-gray-400 hover:bg-white/5'
           )}
         >
-          {tab.label}
+          {t(tab.labelKey)}
         </button>
       ))}
     </nav>

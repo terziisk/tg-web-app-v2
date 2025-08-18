@@ -1,1 +1,25 @@
-{}
+{
+  "settings": "Settings",
+  "appearance": "Appearance", 
+  "light_theme": "Light",
+  "dark_theme": "Dark",
+  "language": "Language",
+  "save": "Save",
+  "cancel": "Cancel",
+  "close": "Close", 
+  "saving": "Saving...",
+  "unsaved_changes": "You have unsaved changes",
+  
+  "my_activities": "My Activities",
+  "management": "Management",
+  "advertiser": "For Advertisers",
+  
+  "activities_content": "Content of \"My Activities\" page",
+  "management_content": "Content of \"Management\" page", 
+  "advertiser_content": "Content of \"For Advertisers\" page",
+  
+  "management_header": "Management",
+  "advertiser_header": "For Advertisers",
+  
+  "loading_profile": "Loading your profile..."
+}

@@ -1,38 +1,36 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-// import en from './locales/en.json';
-// import ru from './locales/ru.json';
+import en from './src/locales/en.json';
+import ru from './src/locales/ru.json';
 
 const resources = {
   ru: {
-    translation: {
-      settings: 'Настройки',
-      light_theme: 'Светлая тема',
-      dark_theme: 'Тёмная тема',
-      language: 'Язык',
-      // ... другие ключи ...
-    }
+    translation: ru
   },
   en: {
-    translation: {
-      settings: 'Settings',
-      light_theme: 'Light theme',
-      dark_theme: 'Dark theme',
-      language: 'Language',
-      // ... другие ключи ...
-    }
+    translation: en
   }
 };
 
 i18n
-  .use(initReactI18next) // подключаем к React
+  .use(initReactI18next)
   .init({
     resources,
     lng: "en", // язык по умолчанию
     fallbackLng: "en",
+    
+    // Настройки интерполяции
     interpolation: {
       escapeValue: false, // React сам экранирует HTML
     },
+    
+    // Настройки для отладки (отключить в продакшене)
+    debug: import.meta.env.DEV,
+    
+    // Настройки кеширования
+    react: {
+      useSuspense: false, // Отключаем Suspense для более простой интеграции
+    }
   });
 
-export default i18n;
+  export default i18n;

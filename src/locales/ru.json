@@ -1,1 +1,25 @@
-{}
+{
+  "settings": "Настройки",
+  "appearance": "Тема оформления",
+  "light_theme": "Светлая",
+  "dark_theme": "Тёмная",
+  "language": "Язык",
+  "save": "Сохранить",
+  "cancel": "Отменить", 
+  "close": "Закрыть",
+  "saving": "Сохранение...",
+  "unsaved_changes": "Есть несохранённые изменения",
+  
+  "my_activities": "Мои активности",
+  "management": "Управление", 
+  "advertiser": "Рекламодателю",
+  
+  "activities_content": "Контент страницы \"Мои активности\"",
+  "management_content": "Контент страницы \"Управление\"",
+  "advertiser_content": "Контент страницы \"Рекламодателю\"",
+  
+  "management_header": "Управление",
+  "advertiser_header": "Рекламодателю",
+  
+  "loading_profile": "Загружаем ваш профиль..."
+}

@@ -1,14 +1,14 @@
 // src/features/settings/SettingsPanel.tsx
 import { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '../../store/settingsStore';
 import { Icons } from '../../components/Icons';
 import clsx from 'clsx';
 
 export const SettingsPanel = () => {
+  const { t } = useTranslation();
   const { 
     isPanelOpen, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    closePanel,
     closePanelWithoutSaving, 
     hasUnsavedChanges, 
     isSaving, 
@@ -86,12 +86,12 @@ export const SettingsPanel = () => {
         className="w-11/12 max-w-sm rounded-lg bg-tg-secondary-bg p-6 shadow-lg border border-tg-section-separator-color"
       >
         <h2 className="mb-6 text-center text-xl font-bold">
-          Настройки
+          {t('settings')}
         </h2>
-        <button className='bg-tg-button'>Тестовая</button>
+
         {/* Тема оформления */}
         <div className="mb-6">
-          <h4 className="mb-3 font-medium">Тема оформления</h4>
+          <h4 className="mb-3 font-medium">{t('appearance')}</h4>
           <div className="flex gap-2">
             <button 
               onClick={() => handleThemeChange('light')} 
@@ -100,7 +100,7 @@ export const SettingsPanel = () => {
                 'bg-transparent border-tg-hint': colorScheme === 'light',
               })}
             >
-              Светлая
+              {t('light_theme')}
             </button>
             <button 
               onClick={() => handleThemeChange('dark')} 
@@ -109,14 +109,14 @@ export const SettingsPanel = () => {
                 'bg-transparent border-tg-hint': colorScheme === 'dark',
               })}
             >
-              Тёмная
+              {t('dark_theme')}
             </button>
           </div>
         </div>
 
         {/* Язык */}
         <div className="mb-6">
-          <h4 className="mb-3 font-medium">Язык</h4>
+          <h4 className="mb-3 font-medium">{t('language')}</h4>
           <div className="flex gap-2">
             <button 
               onClick={() => handleLanguageChange('ru')} 
@@ -142,7 +142,7 @@ export const SettingsPanel = () => {
         {/* Показываем индикатор изменений */}
         {hasUnsavedChanges && (
           <div className="mb-4 text-center text-sm text-tg-link">
-            Есть несохранённые изменения
+            {t('unsaved_changes')}
           </div>
         )}
 
@@ -153,15 +153,15 @@ export const SettingsPanel = () => {
               <button 
                 onClick={handleSaveAndClose}
                 disabled={isSaving}
-                className="flex flex-1 items-center border border-tg-hint justify-center rounded-lg  px-4 py-3 font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex flex-1 items-center border border-tg-hint justify-center rounded-lg px-4 py-3 font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Сохранение...
+                    {t('saving')}
                   </>
                 ) : (
-                  'Сохранить'
+                  t('save')
                 )}
               </button>
               <button 
@@ -169,7 +169,7 @@ export const SettingsPanel = () => {
                 disabled={isSaving}
                 className="flex-1 rounded-lg border px-4 py-3 font-medium transition-colors disabled:opacity-50"
               >
-                Отменить
+                {t('cancel')}
               </button>
             </div>
           ) : (
@@ -177,7 +177,7 @@ export const SettingsPanel = () => {
               onClick={closePanelWithoutSaving}
               className="w-full rounded-lg border border-tg-hint px-4 py-3 font-medium transition-colors"
             >
-              Закрыть
+              {t('close')}
             </button>
           )}
         </div>
