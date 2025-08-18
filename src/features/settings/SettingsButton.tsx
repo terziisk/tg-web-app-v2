@@ -5,9 +5,14 @@ import { Icons } from '@/components/Icons';
 export const SettingsButton = () => {
   const { openPanel, hasUnsavedChanges } = useSettingsStore();
 
+  console.log("⚙️ Рендерим SettingsButton, несохранённые изменения:", hasUnsavedChanges);
+
   return (
     <button 
-      onClick={openPanel} 
+      onClick={() => {
+        console.log("🎛️ Нажата кнопка настроек");
+        openPanel();
+      }} 
       className="relative text-link-color hover:text-text-color transition-colors"
     >
       <Icons.management className="w-6 h-6" />

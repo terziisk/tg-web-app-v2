@@ -25,6 +25,7 @@ interface SettingsState {
   togglePanel: () => void;
   openPanel: () => void;
   closePanel: () => void;
+  closePanelWithoutSaving: () => void;
   
   // Действия для настроек
   setLanguage: (lang: Language) => void;
@@ -75,8 +76,16 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   closePanel: async () => {
     const state = get();
     if (state.hasUnsavedChanges) {
-      await state.saveSettings();
+      console.log("💾 Закрываем панель с сохранением изменений");
+      try {
+        await state.saveSettings();
+      } catch (error) {
+        console.error("❌ Ошибка при автосохранении:", error);
+        // Не закрываем панель если сохранение не удалось
+        return;
+      }
     }
+    console.log("🚪 Закрываем панель настроек");
     set({ isPanelOpen: false });
   },
   
@@ -93,6 +102,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   
   // Инициализация (вызывается при загрузке профиля)
   initializeSettings: (lang, scheme) => {
+    console.log("🎨 Инициализируем настройки:", { lang, scheme });
     set({
       language: lang,
       colorScheme: scheme,
@@ -141,7 +151,19 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       throw error;
     }
   },
-  
+    // Закрытие панели без сохранения
+
+    closePanelWithoutSaving: () => {
+    console.log("🚫 Закрываем панель без сохранения изменений")
+    const state = get();
+    set({
+      isPanelOpen: false,
+      language: state.initialLanguage,
+      colorScheme: state.initialColorScheme,
+      hasUnsavedChanges: false,
+    });
+  },
+
   // Отмена изменений
   discardChanges: () => {
     const state = get();

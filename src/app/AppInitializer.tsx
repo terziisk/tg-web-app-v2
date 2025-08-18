@@ -42,6 +42,13 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
         const initialLanguage: Language = tgLanguage === 'ru' ? 'ru' : 'en';
         const initialColorScheme: ColorScheme = tgColorScheme as ColorScheme;
 
+        console.log("🎨 Начальные настройки из Telegram:", { 
+          tgLanguage, 
+          tgColorScheme, 
+          initialLanguage, 
+          initialColorScheme 
+        });
+
         // Если токен есть, проверяем его валидность
         if (accessToken) {
           try {
@@ -51,6 +58,12 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
             // Инициализируем настройки из бэкенда
             const backendLanguage = backendData.settings.languageCode as Language || initialLanguage;
             const backendColorScheme = backendData.settings.colorScheme as ColorScheme || initialColorScheme;
+            
+            console.log("🎨 Настройки из бэкенда:", { 
+              backendLanguage, 
+              backendColorScheme,
+              backendSettings: backendData.settings
+            });
             
             initializeSettings(backendLanguage, backendColorScheme);
             login(accessToken, user, backendData);
