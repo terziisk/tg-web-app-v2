@@ -60,18 +60,34 @@ export const useAuthStore = create(
     {
       name: "auth-storage",
       // Сохраняем только токен и статус аутентификации
-      
       partialize: (state) => ({ 
         accessToken: state.accessToken,
         isAuthenticated: state.isAuthenticated 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any),
-      // Добавляем логирование для отладки
-      onRehydrateStorage: () => (state) => {
+      
+      // Правильная инициализация после восстановления из localStorage
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.error("💾 Ошибка при восстановлении состояния:", error);
+          return;
+        }
+        
         console.log("💾 Восстанавливаем состояние из localStorage:", {
           hasToken: !!state?.accessToken,
           isAuthenticated: state?.isAuthenticated
         });
+
+        // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: устанавливаем isLoading в зависимости от того, 
+        // есть ли у нас токен и аутентифицированы ли мы
+        if (state && state.isAuthenticated && state.accessToken) {
+          // Если есть токен и мы аутентифицированы, но нужно будет проверить токен
+          state.isLoading = true; // Оставляем true, чтобы AppInitializer мог корректно обработать
+        } else if (state) {
+          // Если нет токена или не аутентифицированы, все равно нужна инициализация
+          state.isLoading = true;
+          state.isAuthenticated = false; // На всякий случай сбрасываем флаг
+        }
       },
     }
   )

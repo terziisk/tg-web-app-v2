@@ -7,7 +7,7 @@ import { useSettingsStore, type ColorScheme, type Language } from "../store/sett
 import AppLoader from "./AppLoader";
 
 export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
-  const { accessToken, login, logout, setLoading, isLoading, isAuthenticated } = useAuthStore();
+  const { accessToken, login, logout, setLoading, isLoading, isAuthenticated, profile } = useAuthStore();
   const { initializeSettings } = useSettingsStore();
   const launchParams = useLaunchParams();
   const user = launchParams.tgWebAppData?.user;
@@ -17,9 +17,9 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   const initializationStarted = useRef(false);
 
   useEffect(() => {
-    // Если уже аутентифицированы или инициализация уже началась, не запускаем повторно
-    if (isAuthenticated || initializationStarted.current) {
-      console.log("⏭️ Пропускаем инициализацию: уже аутентифицированы или инициализация в процессе");
+    // Если инициализация уже началась, не запускаем повторно
+    if (initializationStarted.current) {
+      console.log("⏭️ Пропускаем инициализацию: инициализация уже в процессе");
       return;
     }
 
@@ -29,7 +29,24 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    console.log("🚀 Запускаем инициализацию приложения");
+    // Проверяем, нужна ли нам инициализация:
+    // 1. Если нет токена - точно нужна
+    // 2. Если есть токен, но нет профиля - нужна (случай перезагрузки страницы)
+    // 3. Если есть и токен, и профиль - не нужна
+    const needsInitialization = !accessToken || !profile;
+    
+    if (!needsInitialization) {
+      console.log("⏭️ Инициализация не нужна: токен и профиль уже загружены");
+      setLoading(false);
+      return;
+    }
+
+    console.log("🚀 Запускаем инициализацию приложения", {
+      hasToken: !!accessToken,
+      hasProfile: !!profile,
+      reason: !accessToken ? "нет токена" : "нет профиля"
+    });
+    
     initializationStarted.current = true;
 
     const startup = async () => {
@@ -118,7 +135,8 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
     // Убираем лишние зависимости, оставляем только критически важные
     rawInitData, 
     user?.id, // Только ID пользователя, чтобы не реагировать на изменения объекта
-    isAuthenticated // Добавляем, чтобы не запускать если уже аутентифицированы
+    accessToken, // Добавляем токен как зависимость
+    profile // Добавляем профиль как зависимость
   ]);
 
   if (isLoading) {
