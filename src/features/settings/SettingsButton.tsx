@@ -1,6 +1,6 @@
 // src/features/settings/SettingsButton.tsx
-import { useSettingsStore } from '@/store/settingsStore';
-import { Icons } from '@/components/Icons';
+import { useSettingsStore } from '../../store/settingsStore';
+import { Icons } from '../../components/Icons';
 
 export const SettingsButton = () => {
   const { openPanel, hasUnsavedChanges } = useSettingsStore();

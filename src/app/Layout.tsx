@@ -6,6 +6,7 @@ import { useUiStore } from '../store/uiStore';
 import { ProfileHeader } from '../features/ProfileHeader';
 import { MainTabs } from '../features/MainTabs';
 import { SettingsPanel } from '../features/settings/SettingsPanel';
+import { SettingsButton } from '../features/settings/SettingsButton';
 
 // --- Заглушки ---
 const ManagementHeader = () => <div className="p-4 text-center text-xl font-bold">Управление</div>;
@@ -35,7 +36,12 @@ const Layout = () => {
 
   return (
     <>
-      <header>{headerComponents[activeTab]}</header>
+      <div className="relative">
+        <header>{headerComponents[activeTab]}</header>
+        <div className="absolute top-4 right-4 z-10">
+          <SettingsButton />
+        </div>
+      </div>
       <MainTabs />
       <main>{pageComponents[activeTab]}</main>
       <SettingsPanel />

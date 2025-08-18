@@ -1,5 +1,5 @@
 // src/app/AppLoader.tsx
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 import React from 'react';
 
 const AppLoader: React.FC = () => {

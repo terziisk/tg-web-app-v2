@@ -1,7 +1,6 @@
 // src/init.tsx
 import {
   init as initSDK,
-  bindThemeParamsCssVars,
   restoreInitData,
   miniApp,
 } from '@telegram-apps/sdk-react';
@@ -17,12 +16,10 @@ export async function init() {
   // для хуков типа `useWebApp()` в компонентах.
   restoreInitData();
   
-  // Эта функция — ключевая для темы. Она создает и автоматически
-  // обновляет CSS-переменные (например, --tg-theme-bg-color)
-  // на основе темы пользователя в Telegram.
-  // Компоненты из @telegram-apps/telegram-ui будут их использовать.
+  // Ключевое изменение: мы больше НЕ вызываем bindThemeParamsCssVars(),
+  // чтобы взять управление темой на себя в компоненте App.tsx
+  
    if (miniApp.mountSync.isAvailable()) {
     miniApp.mountSync();
-    bindThemeParamsCssVars();
   }
 }

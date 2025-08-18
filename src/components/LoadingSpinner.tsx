@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Icons } from "@/components/Icons";
+import { Icons } from "./Icons";
 
 export const LoadingSpinner = () => {
   console.log("[LoadingSpinner] Отображаем индикатор загрузки. Версия 1.0.7");

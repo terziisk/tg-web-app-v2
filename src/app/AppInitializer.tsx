@@ -1,9 +1,9 @@
 // src/app/AppInitializer.tsx
 import { useEffect, useRef } from "react";
-import { useLaunchParams, useRawInitData } from "@telegram-apps/sdk-react";
+import { useLaunchParams, useRawInitData, isColorDark, isRGB } from "@telegram-apps/sdk-react";
 import { useAuthStore } from "../store/authStore";
 import { authenticateUser, verifyAndFetchUser } from "../lib/api/authService";
-import { useSettingsStore, type ColorScheme, type Language } from "@/store/settingsStore";
+import { useSettingsStore, type ColorScheme, type Language } from "../store/settingsStore";
 import AppLoader from "./AppLoader";
 
 export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
@@ -36,11 +36,15 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
       try {
         // Получаем начальные настройки из Telegram
         const tgLanguage = (user as { languageCode?: string })?.languageCode;
-        const tgColorScheme = launchParams.tgWebAppThemeParams?.bg_color ? 
-          (launchParams.tgWebAppThemeParams.bg_color === '#ffffff' ? 'light' : 'dark') : 'dark';
+        
+        let tgColorScheme: ColorScheme = 'light'; // Default to light
+        const bgColor = launchParams.tgWebAppThemeParams?.bg_color;
+        if (bgColor && isRGB(bgColor) && isColorDark(bgColor)) {
+          tgColorScheme = 'dark';
+        }
 
         const initialLanguage: Language = tgLanguage === 'ru' ? 'ru' : 'en';
-        const initialColorScheme: ColorScheme = tgColorScheme as ColorScheme;
+        const initialColorScheme: ColorScheme = tgColorScheme;
 
         console.log("🎨 Начальные настройки из Telegram:", { 
           tgLanguage, 
@@ -89,7 +93,7 @@ export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
         // Затем получаем данные профиля
         const backendData = await verifyAndFetchUser();
         
-        // Обновляем настройки данными из бэкенда
+        // Обновляем данные из бэкенда
         const backendLanguage = backendData.settings.languageCode as Language || initialLanguage;
         const backendColorScheme = backendData.settings.colorScheme as ColorScheme || initialColorScheme;
         

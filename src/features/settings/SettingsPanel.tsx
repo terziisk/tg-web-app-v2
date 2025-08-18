@@ -1,7 +1,8 @@
 // src/features/settings/SettingsPanel.tsx
 import { useRef, useEffect } from 'react';
-import { useSettingsStore } from '@/store/settingsStore';
-import { Icons } from '@/components/Icons';
+import { useSettingsStore } from '../../store/settingsStore';
+import { Icons } from '../../components/Icons';
+import clsx from 'clsx';
 
 export const SettingsPanel = () => {
   const { 
@@ -79,36 +80,34 @@ export const SettingsPanel = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div 
         ref={panelRef}
-        className="w-11/12 max-w-sm rounded-lg bg-secondary-bg-color p-6 shadow-lg"
+        className="w-11/12 max-w-sm rounded-lg bg-tg-secondary-bg p-6 shadow-lg border border-tg-section-separator-color"
       >
-        <h2 className="mb-6 text-center text-xl font-bold text-text-color">
+        <h2 className="mb-6 text-center text-xl font-bold">
           Настройки
         </h2>
-        
+        <button className='bg-tg-button'>Тестовая</button>
         {/* Тема оформления */}
         <div className="mb-6">
-          <h4 className="mb-3 text-text-color font-medium">Тема оформления</h4>
+          <h4 className="mb-3 font-medium">Тема оформления</h4>
           <div className="flex gap-2">
             <button 
               onClick={() => handleThemeChange('light')} 
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                colorScheme === 'light' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
+                'border-transparent': colorScheme !== 'light',
+                'bg-transparent border-tg-hint': colorScheme === 'light',
+              })}
             >
               Светлая
             </button>
             <button 
               onClick={() => handleThemeChange('dark')} 
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                colorScheme === 'dark' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
+                'border-transparent': colorScheme !== 'dark',
+                'bg-transparent border-tg-hint': colorScheme === 'dark',
+              })}
             >
               Тёмная
             </button>
@@ -117,25 +116,23 @@ export const SettingsPanel = () => {
 
         {/* Язык */}
         <div className="mb-6">
-          <h4 className="mb-3 text-text-color font-medium">Язык</h4>
+          <h4 className="mb-3 font-medium">Язык</h4>
           <div className="flex gap-2">
             <button 
               onClick={() => handleLanguageChange('ru')} 
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                language === 'ru' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
+                'border-transparent': language !== 'ru',
+                'bg-transparent border-tg-hint': language === 'ru',
+              })}
             >
               RU
             </button>
             <button 
               onClick={() => handleLanguageChange('en')} 
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                language === 'en' 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
+                'border-transparent': language !== 'en',
+                'bg-transparent border-tg-hint': language === 'en',
+              })}
             >
               EN
             </button>
@@ -144,7 +141,7 @@ export const SettingsPanel = () => {
 
         {/* Показываем индикатор изменений */}
         {hasUnsavedChanges && (
-          <div className="mb-4 text-center text-sm text-yellow-500">
+          <div className="mb-4 text-center text-sm text-tg-link">
             Есть несохранённые изменения
           </div>
         )}
@@ -156,11 +153,11 @@ export const SettingsPanel = () => {
               <button 
                 onClick={handleSaveAndClose}
                 disabled={isSaving}
-                className="flex-1 px-4 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="flex flex-1 items-center border border-tg-hint justify-center rounded-lg  px-4 py-3 font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
-                    <Icons.spinner className="w-4 h-4 animate-spin mr-2" />
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     Сохранение...
                   </>
                 ) : (
@@ -170,7 +167,7 @@ export const SettingsPanel = () => {
               <button 
                 onClick={handleDiscardAndClose}
                 disabled={isSaving}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="flex-1 rounded-lg border px-4 py-3 font-medium transition-colors disabled:opacity-50"
               >
                 Отменить
               </button>
@@ -178,7 +175,7 @@ export const SettingsPanel = () => {
           ) : (
             <button 
               onClick={closePanelWithoutSaving}
-              className="w-full px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+              className="w-full rounded-lg border border-tg-hint px-4 py-3 font-medium transition-colors"
             >
               Закрыть
             </button>

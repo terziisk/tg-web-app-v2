@@ -1,6 +1,7 @@
 // src/store/settingsStore.ts
 import { create } from 'zustand';
-import { updateUserSettings } from '@/lib/api/authService';
+import { updateUserSettings } from '../lib/api/authService';
+import i18n from '../../i18n';
 
 export type Language = 'ru' | 'en';
 export type ColorScheme = 'light' | 'dark';
@@ -91,6 +92,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   
   // Действия для настроек
   setLanguage: (lang) => {
+    i18n.changeLanguage(lang);
     set({ language: lang });
     get().checkForChanges();
   },
@@ -103,6 +105,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   // Инициализация (вызывается при загрузке профиля)
   initializeSettings: (lang, scheme) => {
     console.log("🎨 Инициализируем настройки:", { lang, scheme });
+    i18n.changeLanguage(lang);
     set({
       language: lang,
       colorScheme: scheme,

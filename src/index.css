@@ -1,3 +1,14 @@
 @import "tailwindcss";
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+/* 
+  Устанавливаем базовые цвета через переменные Telegram.
+  Это гарантирует, что даже без Tailwind, базовые элементы будут в теме,
+  а Tailwind сможет их использовать через конфигурацию.
+*/
+body {
+  background-color: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+  font-family: 'Inter', sans-serif;
+}

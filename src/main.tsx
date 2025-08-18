@@ -16,6 +16,7 @@ import ReactDOM from 'react-dom/client';
 
 import App from './app/App';
 import { init } from './init.ts';
+import "../i18n"; 
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
