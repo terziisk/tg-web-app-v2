@@ -62,7 +62,9 @@ apiClient.interceptors.request.use(
       return config;
     }
 
-    console.log("Токен истек. Начинаем процесс обновления...");
+    console.log("Токен истек. Начинаем процесс обновления.... Время жизни токена: ", new Date(decodedToken.exp * 1000).toLocaleString());
+    console.log("Текущая дата: ", Date.now());
+    console.log("Из токена: ",  decodedToken.exp * 1000);
 
     // Если уже идет процесс обновления, ставим текущий запрос в очередь
     if (isRefreshing) {

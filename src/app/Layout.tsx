@@ -5,6 +5,7 @@ import { useUiStore } from '../store/uiStore';
 // Импортируем твои фичи и страницы
 import { ProfileHeader } from '../features/ProfileHeader';
 import { MainTabs } from '../features/MainTabs';
+import { SettingsPanel } from '../features/settings/SettingsPanel';
 
 // --- Заглушки ---
 const ManagementHeader = () => <div className="p-4 text-center text-xl font-bold">Управление</div>;
@@ -37,6 +38,7 @@ const Layout = () => {
       <header>{headerComponents[activeTab]}</header>
       <MainTabs />
       <main>{pageComponents[activeTab]}</main>
+      <SettingsPanel />
     </>
   );
 };

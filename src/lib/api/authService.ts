@@ -1,8 +1,13 @@
 // src/lib/api/authService.ts
 
-import axios from 'axios';
-import apiClient from './apiClient';
-import { type RetrieveLPResult } from "@telegram-apps/sdk-react"; // Используем утилиту из базового SDK
+import axios from "axios";
+import apiClient from "./apiClient";
+import {
+  type RetrieveLPResult,
+  isThemeParamsDark,
+  isColorDark,
+  isRGB,
+} from "@telegram-apps/sdk-react"; // Используем утилиту из базового SDK
 
 interface AuthResponse {
   accessToken: string;
@@ -34,7 +39,7 @@ export interface OwnerPart {
 }
 
 export interface AdvertiserPart {
-  ads: string[]; 
+  ads: string[];
 }
 
 export interface Channel {
@@ -47,6 +52,13 @@ export interface Channel {
   posts: unknown[];
   giveaways: unknown[];
 }
+
+// ✅ Определяем тип для настроек
+export interface UserSettings {
+  appLanguageCode?: string;
+  appColorScheme?: "light" | "dark";
+}
+
 /**
  * Собирает все данные о пользователе и устройстве и отправляет на бэкенд для аутентификации.
  * @param initDataRaw - Сырая строка initData из useRawLaunchParams().
@@ -57,6 +69,24 @@ export async function authenticateUser(
   launchParams: RetrieveLPResult
 ): Promise<AuthResponse> {
   console.log("Собираем данные для отправки на бэкенд...");
+  console.log("isThemeParamsDark:", isThemeParamsDark);
+
+  // ✅ Вычисляем тему ('light' или 'dark') на основе цвета фона
+  // ✅ Вычисляем тему ('light' или 'dark') на основе цвета фона
+  let colorScheme: "light" | "dark" = "light"; // Безопасное значение по умолчанию
+  try {
+    const { bg_color: bgColor } = launchParams.tgWebAppThemeParams;
+    // Проверяем, что цвет есть, что это RGB-формат и что он темный
+    if (bgColor && isRGB(bgColor) && isColorDark(bgColor)) {
+      colorScheme = "dark";
+    }
+  } catch (e) {
+    console.error(
+      'Не удалось определить тему, используется "light" по умолчанию:',
+      e
+    );
+  }
+  console.log("Определенная тема:", colorScheme);
 
   // Используем глобальный объект, как и предлагает документация Telegram для таких данных
   // const webApp = window.Telegram.WebApp;
@@ -70,6 +100,7 @@ export async function authenticateUser(
       appVersion: launchParams.tgWebAppVersion,
       //colorScheme: webApp.colorScheme,
       startParam: launchParams.tgWebAppStartParam,
+      colorScheme: colorScheme,
     },
     deviceContext: {
       userAgent: navigator.userAgent,
@@ -86,9 +117,9 @@ export async function authenticateUser(
   console.log("Отправляемый payload:", payload);
   await new Promise((resolve) => setTimeout(resolve, 2000)); // Задержка для теста
 
-// ✅ Для запроса на логин используем "чистый" axios, чтобы избежать рекурсии в перехватчике
+  // ✅ Для запроса на логин используем "чистый" axios, чтобы избежать рекурсии в перехватчике
   const response = await axios.post<AuthResponse>(
-    `${import.meta.env.VITE_API_BASE_URL}/auth/login`, 
+    `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
     payload
   );
   console.log("Ответ от бэкенда /login:", response.data);
@@ -98,8 +129,14 @@ export async function authenticateUser(
 // ✅ НОВЫЙ МЕТОД для проверки токена и получения данных
 export async function verifyAndFetchUser(): Promise<BackendProfile> {
   // Этот эндпоинт должен быть защищен JWT на бэкенде
-  const response = await apiClient.get<BackendProfile>('/users/me');
+  const response = await apiClient.get<BackendProfile>("/users/me");
 
   console.log("Ответ от бэкенда /me:", response.data);
   return response.data;
+}
+
+export async function updateUserSettings(
+  settings: UserSettings
+): Promise<void> {
+  await apiClient.put("/users/me/settings", settings);
 }
