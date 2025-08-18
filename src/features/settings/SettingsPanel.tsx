@@ -83,103 +83,177 @@ export const SettingsPanel = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div 
         ref={panelRef}
-        className="w-11/12 max-w-sm rounded-lg bg-tg-secondary-bg p-6 shadow-lg border border-tg-section-separator-color"
+        className="w-11/12 max-w-sm rounded-xl shadow-2xl"
+        style={{
+          backgroundColor: 'var(--tg-theme-secondary-bg-color)',
+          color: 'var(--tg-theme-text-color)',
+          border: `1px solid var(--tg-theme-section-separator-color)`
+        }}
       >
-        <h2 className="mb-6 text-center text-xl font-bold">
-          {t('settings')}
-        </h2>
-
-        {/* Тема оформления */}
-        <div className="mb-6">
-          <h4 className="mb-3 font-medium">{t('appearance')}</h4>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => handleThemeChange('light')} 
-              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
-                'border-transparent': colorScheme !== 'light',
-                'bg-transparent border-tg-hint': colorScheme === 'light',
-              })}
-            >
-              {t('light_theme')}
-            </button>
-            <button 
-              onClick={() => handleThemeChange('dark')} 
-              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
-                'border-transparent': colorScheme !== 'dark',
-                'bg-transparent border-tg-hint': colorScheme === 'dark',
-              })}
-            >
-              {t('dark_theme')}
-            </button>
-          </div>
+        {/* Заголовок */}
+        <div className="p-6 pb-4">
+          <h2 className="text-center text-xl font-bold">
+            {t('settings')}
+          </h2>
         </div>
 
-        {/* Язык */}
-        <div className="mb-6">
-          <h4 className="mb-3 font-medium">{t('language')}</h4>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => handleLanguageChange('ru')} 
-              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
-                'border-transparent': language !== 'ru',
-                'bg-transparent border-tg-hint': language === 'ru',
-              })}
-            >
-              RU
-            </button>
-            <button 
-              onClick={() => handleLanguageChange('en')} 
-              className={clsx('flex-1 rounded-lg px-4 py-2 font-medium transition-colors border', {
-                'border-transparent': language !== 'en',
-                'bg-transparent border-tg-hint': language === 'en',
-              })}
-            >
-              EN
-            </button>
-          </div>
-        </div>
-
-        {/* Показываем индикатор изменений */}
-        {hasUnsavedChanges && (
-          <div className="mb-4 text-center text-sm text-tg-link">
-            {t('unsaved_changes')}
-          </div>
-        )}
-
-        {/* Кнопки действий */}
-        <div className="space-y-3">
-          {hasUnsavedChanges ? (
-            <div className="flex space-x-3">
+        {/* Контент */}
+        <div className="px-6 pb-6">
+          {/* Тема оформления */}
+          <div className="mb-6">
+            <h4 className="mb-3 font-medium" style={{ color: 'var(--tg-theme-text-color)' }}>
+              {t('appearance')}
+            </h4>
+            <div className="flex gap-2">
               <button 
-                onClick={handleSaveAndClose}
-                disabled={isSaving}
-                className="flex flex-1 items-center border border-tg-hint justify-center rounded-lg px-4 py-3 font-medium transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isSaving ? (
-                  <>
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    {t('saving')}
-                  </>
-                ) : (
-                  t('save')
+                onClick={() => handleThemeChange('light')} 
+                className={clsx(
+                  'flex-1 rounded-lg px-4 py-2.5 font-medium transition-all duration-200',
+                  colorScheme === 'light' 
+                    ? 'border-2 shadow-sm' 
+                    : 'border border-opacity-30 hover:border-opacity-60'
                 )}
+                style={{
+                  backgroundColor: colorScheme === 'light' 
+                    ? 'var(--tg-theme-bg-color)' 
+                    : 'transparent',
+                  borderColor: colorScheme === 'light' 
+                    ? 'var(--tg-theme-link-color)' 
+                    : 'var(--tg-theme-hint-color)',
+                  color: 'var(--tg-theme-text-color)'
+                }}
+              >
+                {t('light_theme')}
               </button>
               <button 
-                onClick={handleDiscardAndClose}
-                disabled={isSaving}
-                className="flex-1 rounded-lg border px-4 py-3 font-medium transition-colors disabled:opacity-50"
+                onClick={() => handleThemeChange('dark')} 
+                className={clsx(
+                  'flex-1 rounded-lg px-4 py-2.5 font-medium transition-all duration-200',
+                  colorScheme === 'dark' 
+                    ? 'border-2 shadow-sm' 
+                    : 'border border-opacity-30 hover:border-opacity-60'
+                )}
+                style={{
+                  backgroundColor: colorScheme === 'dark' 
+                    ? 'var(--tg-theme-bg-color)' 
+                    : 'transparent',
+                  borderColor: colorScheme === 'dark' 
+                    ? 'var(--tg-theme-link-color)' 
+                    : 'var(--tg-theme-hint-color)',
+                  color: 'var(--tg-theme-text-color)'
+                }}
               >
-                {t('cancel')}
+                {t('dark_theme')}
               </button>
             </div>
-          ) : (
-            <button 
-              onClick={closePanelWithoutSaving}
-              className="w-full rounded-lg border border-tg-hint px-4 py-3 font-medium transition-colors"
-            >
-              {t('close')}
-            </button>
+          </div>
+
+          {/* Язык */}
+          <div className="mb-6">
+            <h4 className="mb-3 font-medium" style={{ color: 'var(--tg-theme-text-color)' }}>
+              {t('language')}
+            </h4>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => handleLanguageChange('ru')} 
+                className={clsx(
+                  'flex-1 rounded-lg px-4 py-2.5 font-medium transition-all duration-200',
+                  language === 'ru' 
+                    ? 'border-2 shadow-sm' 
+                    : 'border border-opacity-30 hover:border-opacity-60'
+                )}
+                style={{
+                  backgroundColor: language === 'ru' 
+                    ? 'var(--tg-theme-bg-color)' 
+                    : 'transparent',
+                  borderColor: language === 'ru' 
+                    ? 'var(--tg-theme-link-color)' 
+                    : 'var(--tg-theme-hint-color)',
+                  color: 'var(--tg-theme-text-color)'
+                }}
+              >
+                RU
+              </button>
+              <button 
+                onClick={() => handleLanguageChange('en')} 
+                className={clsx(
+                  'flex-1 rounded-lg px-4 py-2.5 font-medium transition-all duration-200',
+                  language === 'en' 
+                    ? 'border-2 shadow-sm' 
+                    : 'border border-opacity-30 hover:border-opacity-60'
+                )}
+                style={{
+                  backgroundColor: language === 'en' 
+                    ? 'var(--tg-theme-bg-color)' 
+                    : 'transparent',
+                  borderColor: language === 'en' 
+                    ? 'var(--tg-theme-link-color)' 
+                    : 'var(--tg-theme-hint-color)',
+                  color: 'var(--tg-theme-text-color)'
+                }}
+              >
+                EN
+              </button>
+            </div>
+          </div>
+
+          {/* Показываем индикатор изменений */}
+          {hasUnsavedChanges && (
+            <div className="mb-4 text-center text-sm" style={{ color: 'var(--tg-theme-link-color)' }}>
+              {t('unsaved_changes')}
+            </div>
           )}
+
+          {/* Кнопки действий */}
+          <div className="space-y-3">
+            {hasUnsavedChanges ? (
+              <div className="flex space-x-3">
+                <button 
+                  onClick={handleSaveAndClose}
+                  disabled={isSaving}
+                  className="flex flex-1 items-center justify-center rounded-lg px-4 py-3 font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 hover:opacity-90"
+                  style={{
+                    backgroundColor: 'var(--tg-theme-button-color)',
+                    color: 'var(--tg-theme-button-text-color)',
+                    border: 'none'
+                  }}
+                >
+                  {isSaving ? (
+                    <>
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      {t('saving')}
+                    </>
+                  ) : (
+                    t('save')
+                  )}
+                </button>
+                <button 
+                  onClick={handleDiscardAndClose}
+                  disabled={isSaving}
+                  className="flex-1 rounded-lg border px-4 py-3 font-medium transition-all duration-200 disabled:opacity-50 hover:opacity-80"
+                  style={{
+                    backgroundColor: 'transparent',
+                    borderColor: 'var(--tg-theme-hint-color)',
+                    color: 'var(--tg-theme-text-color)'
+                  }}
+                >
+                  {t('cancel')}
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={closePanelWithoutSaving}
+                className="w-full rounded-lg border px-4 py-3 font-medium transition-all duration-200 hover:opacity-80"
+                style={{
+                  backgroundColor: 'transparent',
+                  borderColor: 'var(--tg-theme-hint-color)',
+                  color: 'var(--tg-theme-text-color)'
+                }}
+              >
+                {t('close')}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
