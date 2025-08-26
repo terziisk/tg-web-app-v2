@@ -7,7 +7,7 @@ import { useSettingsStore, type ColorScheme, type Language } from "../store/sett
 import AppLoader from "./AppLoader";
 
 export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
-  const { accessToken, login, logout, setLoading, isLoading, isAuthenticated, profile } = useAuthStore();
+  const { accessToken, login, logout, setLoading, isLoading, profile } = useAuthStore();
   const { initializeSettings } = useSettingsStore();
   const launchParams = useLaunchParams();
   const user = launchParams.tgWebAppData?.user;

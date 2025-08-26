@@ -9,7 +9,8 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "typeRoots": ["./node_modules/@types", "./src"]
   },
   "include": ["src"]
 }

@@ -5,21 +5,42 @@
   "dark_theme": "Тёмная",
   "language": "Язык",
   "save": "Сохранить",
-  "cancel": "Отменить", 
+  "cancel": "Отменить",
   "close": "Закрыть",
   "saving": "Сохранение...",
   "unsaved_changes": "Есть несохранённые изменения",
-  
+
   "my_activities": "Мои активности",
-  "management": "Управление", 
+  "management": "Управление",
   "advertiser": "Рекламодателю",
-  
+
   "activities_content": "Контент страницы \"Мои активности\"",
   "management_content": "Контент страницы \"Управление\"",
   "advertiser_content": "Контент страницы \"Рекламодателю\"",
-  
+
   "management_header": "Управление",
   "advertiser_header": "Рекламодателю",
-  
-  "loading_profile": "Загружаем ваш профиль..."
+
+  "loading_profile": "Загружаем ваш профиль...",
+
+  "channelOwner_title": "Раскройте потенциал вашего канала",
+  "channelOwner_description": "Подключите свой Telegram-канал, чтобы начать работу. (Можете начать с тестового канала, если хотите просто попробовать интерфейс).",
+  "channelOwner_button": "Добавить первый канал",
+  "channelOwner_slide1_text": "Анализируйте активность и аудиторию",
+  "channelOwner_slide2_text": "Увеличивайте вовлеченность",
+  "channelOwner_slide3_text": "Создавайте конкурсы и опросы",
+  "channelOwner_slide4_text": "Отложенные и повторяющиеся публикации",
+  "channelOwner_slide5_text": "Увеличьте активность в инстаграме и других соц. сетях",
+
+  "advertiser_title": "Охватите миллионы пользователей",
+  "advertiser_description": "Запустите свою рекламную кампанию в Telegram и выйдите на свою целевую аудиторию.",
+  "advertiser_button": "Создать первую рекламную кампанию",
+  "advertiser_slide1_text": "Выбирайте лучшие каналы",
+  "advertiser_slide2_text": "Настраивайте бюджет",
+  "advertiser_slide3_text": "Следите за эффективностью",
+  "advertiser_slide4_text": "Охватывайте миллионы",
+
+  "carousel_aria_previous": "Предыдущий слайд",
+  "carousel_aria_next": "Следующий слайд",
+  "carousel_aria_goToSlide": "Перейти к слайду {{slideNumber}}"
 }

@@ -1,25 +1,46 @@
 {
   "settings": "Settings",
-  "appearance": "Appearance", 
+  "appearance": "Appearance",
   "light_theme": "Light",
   "dark_theme": "Dark",
   "language": "Language",
   "save": "Save",
   "cancel": "Cancel",
-  "close": "Close", 
+  "close": "Close",
   "saving": "Saving...",
   "unsaved_changes": "You have unsaved changes",
-  
+
   "my_activities": "My Activities",
   "management": "Management",
   "advertiser": "For Advertisers",
-  
+
   "activities_content": "Content of \"My Activities\" page",
-  "management_content": "Content of \"Management\" page", 
+  "management_content": "Content of \"Management\" page",
   "advertiser_content": "Content of \"For Advertisers\" page",
-  
-  "management_header": "Management",
+
+  "management_header": "Management header",
   "advertiser_header": "For Advertisers",
-  
-  "loading_profile": "Loading your profile..."
+
+  "loading_profile": "Loading your profile...",
+
+  "channelOwner_title": "Unlock Your Channel's Potential",
+  "channelOwner_description": "Connect your Telegram channel to get started. (You can start with the test channel if you just want to try out the interface)",
+  "channelOwner_button": "Add Your First Channel",
+  "channelOwner_slide1_text": "Analyze activity and audience",
+  "channelOwner_slide2_text": "Increase engagement",
+  "channelOwner_slide3_text": "Create contests and surveys",
+  "channelOwner_slide4_text": "Delayed and recurring publications",
+  "channelOwner_slide5_text": "Increase your activity on Instagram and other social networks",
+
+  "advertiser_title": "Reach Millions of Users",
+  "advertiser_description": "Launch your advertising campaign on Telegram and connect with your target audience.",
+  "advertiser_button": "Create First Ad Campaign",
+  "advertiser_slide1_text": "Choose the best channels",
+  "advertiser_slide2_text": "Set Your Budget",
+  "advertiser_slide3_text": "Monitor Ad Performance",
+  "advertiser_slide4_text": "Reach Millions of Users",
+
+  "carousel_aria_previous": "Previous slide",
+  "carousel_aria_next": "Next slide",
+  "carousel_aria_goToSlide": "Go to slide {{slideNumber}}"
 }
